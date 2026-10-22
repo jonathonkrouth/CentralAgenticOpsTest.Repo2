@@ -38,7 +38,7 @@ internal sealed class FakeDbParameterCollection : DbParameterCollection
     public override int IndexOf(object value) => value is DbParameter parameter ? _parameters.IndexOf(parameter) : -1;
 
     public override int IndexOf(string parameterName) =>
-        _parameters.FindIndex(parameter => parameter.ParameterName == parameterName);
+        _parameters.FindIndex(parameter => Normalize(parameter.ParameterName) == Normalize(parameterName));
 
     public override void Insert(int index, object value) => _parameters.Insert(index, (DbParameter)value);
 
@@ -51,10 +51,13 @@ internal sealed class FakeDbParameterCollection : DbParameterCollection
     protected override DbParameter GetParameter(int index) => _parameters[index];
 
     protected override DbParameter GetParameter(string parameterName) =>
-        _parameters.Find(parameter => parameter.ParameterName == parameterName)
+        _parameters.Find(parameter => Normalize(parameter.ParameterName) == Normalize(parameterName))
         ?? throw new KeyNotFoundException($"Parameter '{parameterName}' was not added to the command.");
 
     protected override void SetParameter(int index, DbParameter value) => _parameters[index] = value;
 
     protected override void SetParameter(string parameterName, DbParameter value) => _parameters[IndexOf(parameterName)] = value;
+
+    // SqlClient treats "@Name" and "Name" as the same parameter; Dapper adds names without the prefix.
+    private static string Normalize(string parameterName) => parameterName.TrimStart('@');
 }
