@@ -1,0 +1,41 @@
+@Ingredients.Api_HostAddress = http://localhost:5225
+
+GET {{Ingredients.Api_HostAddress}}/api/ingredients
+Accept: application/json
+
+###
+
+GET {{Ingredients.Api_HostAddress}}/api/ingredients/1
+Accept: application/json
+
+###
+
+POST {{Ingredients.Api_HostAddress}}/api/ingredients
+Content-Type: application/json
+
+{
+  "name": "All-Purpose Flour",
+  "description": "Unbleached enriched wheat flour.",
+  "unitOfMeasure": "Gram",
+  "caloriesPerUnit": 3.64,
+  "isAllergen": true
+}
+
+###
+
+PUT {{Ingredients.Api_HostAddress}}/api/ingredients/1
+Content-Type: application/json
+
+{
+  "name": "All-Purpose Flour",
+  "description": "Unbleached enriched wheat flour. Contains gluten.",
+  "unitOfMeasure": "Cup",
+  "caloriesPerUnit": 455,
+  "isAllergen": true
+}
+
+###
+
+DELETE {{Ingredients.Api_HostAddress}}/api/ingredients/1
+
+###
